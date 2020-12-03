@@ -4,34 +4,34 @@ module Oystercard
   class Card
     MAX_BALANCE = 100
     MIN_FARE = 1
-    attr_reader :balance, :entry_station
+    attr_reader :balance, :entry_station, :journeys, :journey
 
     def initialize
       @balance = 0
-      @entry_station = entry_station
+      @entry_station
+      @journeys = []
+      @journey = { :entry_station => nil, :exit_station => nil }
     end
 
-#this method has been tested
     def top_up(money)
       fail "Exceeds max balance" if balance + money >= MAX_BALANCE
       @balance = @balance + money
     end
 
-#this method has been tested
     def touch_in(entry_station)
       fail "Insufficient funds" if balance < MIN_FARE
-      @entry_station = entry_station
+      @journey[:entry_station] = entry_station
     end
 
-#this method has been tested
     def in_journey?
       !!@entry_station
     end
 
-#this method has been tested
-    def touch_out
+    def touch_out(exit_station)
       deduct(MIN_FARE)
       @entry_station = nil
+      @journey[:exit_station] = exit_station
+      @journeys << @journey.dup
     end
 
     private
